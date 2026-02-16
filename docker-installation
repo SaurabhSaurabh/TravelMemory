@@ -1,0 +1,47 @@
+
+
+🔹 Step 1: Remove old Docker (if any)
+sudo apt remove -y docker docker.io containerd runc
+
+🔹 Step 2: Install prerequisites
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+
+🔹 Step 3: Add Docker’s official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+🔹 Step 4: Add Docker repository (IMPORTANT)
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+For you, VERSION_CODENAME = noble.
+
+🔹 Step 5: Install Docker + Compose plugin
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+🔹 Step 6: Verify
+docker --version
+docker compose version
+
+
+✅ You should see:
+
+Docker version 26.x.x
+Docker Compose version v2.x.x
+
+🔹 Step 7 (Optional but recommended): Run Docker without sudo
+sudo usermod -aG docker $USER
+newgrp docker
+
+
+Test:
+
+docker ps
+
