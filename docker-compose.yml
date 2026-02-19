@@ -14,6 +14,8 @@ services:
     #   - ./backend:/app
     #   - /app/node_modules
     restart: always
+    networks:
+      - mynetwork
 
   frontend:
     container_name: react-frontend
@@ -23,7 +25,9 @@ services:
     ports:
       - "80:80"
     environment:
-      - REACT_APP_BACKEND_URL="http://localhost:3001"
+      - REACT_APP_BACKEND_URL="http://node-backend:3001"
     depends_on:
       - backend
     restart: always
+    networks:
+      - mynetwork
