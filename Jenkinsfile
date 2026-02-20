@@ -7,9 +7,11 @@ pipeline {
     stages {
 
         stage("hello"){
-            script{
+           steps{
+                script{
                 hello()
             }
+           }
         }
      
         
