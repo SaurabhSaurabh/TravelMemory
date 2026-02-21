@@ -155,3 +155,28 @@ pipeline {
 
 
 
+
+
+
+
+
+
+🔍 How to verify (quick checks)
+Check frontend env inside container:
+docker exec -it frontend_container sh
+echo $REACT_APP_BACKEND_URL
+
+Should print:
+
+http://backend:3001
+Check backend is reachable:
+docker exec -it frontend_container sh
+apk add curl
+curl http://backend:3001
+
+If this works → networking is ✅
+
+🧠 Summary (save this forever)
+Th
+
+
