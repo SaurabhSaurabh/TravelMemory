@@ -1,0 +1,212 @@
+
+
+🔹 Step 1: Remove old Docker (if any)
+sudo apt remove -y docker docker.io containerd runc
+
+🔹 Step 2: Install prerequisites
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+
+🔹 Step 3: Add Docker’s official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+🔹 Step 4: Add Docker repository (IMPORTANT)
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+
+For you, VERSION_CODENAME = noble.
+
+🔹 Step 5: Install Docker + Compose plugin
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+🔹 Step 6: Verify
+docker --version
+docker compose version
+
+
+✅ You should see:
+
+Docker version 26.x.x
+Docker Compose version v2.x.x
+
+🔹 Step 7 (Optional but recommended): Run Docker without sudo
+sudo usermod -aG docker $USER
+newgrp docker
+
+
+Test:
+
+docker ps
+=============================================================================================================
+node js installation:
+
+sudo apt update
+sudo apt upgrade -y
+
+sudo apt install -y curl
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+sudo apt install -y nodejs
+node -v
+npm -v
+
+
+pm2 instaation:
+sudo npm install -g pm2
+pm2 -v
+=======================================================================================================
+jenkins installation:
+
+sudo apt update
+sudo apt install fontconfig openjdk-21-jre
+java -version
+
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update
+sudo apt install jenkins
+sudo systemctl enable jenkins
+
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+
+sudo usermod -aG jenkins $USER
+newgrp jenkins
+
+sudo usermod -aG docker jenkins
+sudo systemctl restart docker
+sudo systemctl restart jenkins
+
+
+docker compose installation:
+sudo apt-get install docker-compose-v2
+
+
+jenkins pipeline:
+
+pipeline {
+    agent any
+
+    stages {
+        stage('code') {
+            steps {
+                echo 'cloning code from github'
+                git url: "https://github.com/saiyedin786/TravelMemory_prashant.git",branch: "main"
+                echo 'cloning complete'
+            }
+        }
+        stage('Building backend') {
+            steps {
+                echo 'Build start'
+                sh 'docker build -t saiyedin786/travelmememory-prashant:backend01  ./backend'
+                echo 'Build complete'
+                 echo 'push start start'
+                withCredentials([usernamePassword('credentialsId': 'dockerHubCred',
+                usernameVariable: 'dockerHubUser',
+                passwordVariable: 'dockerHubPass')]){
+                
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker push ${env.dockerHubUser}/travelmememory-prashant:backend01"
+                }
+                
+                echo 'push end'
+            }
+        }
+         stage('Building frontend') {
+            steps {
+                echo 'Build start'
+                sh 'docker build -t saiyedin786/travelmememory-prashant:frontend01  ./frontend'
+                echo 'Build complete'
+                
+                  echo 'push start start'
+                withCredentials([usernamePassword('credentialsId': 'dockerHubCred',
+                usernameVariable: 'dockerHubUser',
+                passwordVariable: 'dockerHubPass')]){
+                
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker push ${env.dockerHubUser}/travelmememory-prashant:frontend01"
+                }
+                
+                echo 'push end'
+                
+            }
+        }
+         stage('Deploy') {
+            steps {
+                echo 'Deploy start'
+                sh "docker compose down && docker compose up -d"
+                echo 'Deploy end'
+            }
+        }
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+🔍 How to verify (quick checks)
+Check frontend env inside container:
+docker exec -it frontend_container sh
+echo $REACT_APP_BACKEND_URL
+
+Should print:
+
+http://backend:3001
+Check backend is reachable:
+docker exec -it frontend_container sh
+apk add curl
+curl http://backend:3001
+
+If this works → networking is ✅
+
+🧠 Summary (save this forever)
+Th
+
+
+ping: not found” (VERY common)
+
+Alpine images (like node:alpine) do not include ping.
+
+Fix for Alpine:
+apk add --no-cache iputils
+
+Then:
+
+ping backend
+❌ 4️⃣ Ping localhost (what it REALLY means)
+ping localhost
+
+
+
+
+Quick Visual (mental diagram)
+docker-compose.yml
+        ↓
+     build args
+        ↓
+     Dockerfile ARG
+        ↓
+     Dockerfile ENV
+        ↓
+     npm run build
+        ↓
+     static JS files
+        ↓
+       browser
