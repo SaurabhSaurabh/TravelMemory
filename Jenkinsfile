@@ -20,7 +20,7 @@ pipeline {
         
         stage("Push docker image to dockerhub") {
                     steps {    
-                            withCredentials([string(credentialsId: 'dockerhub-passkey', variable: 'DOCKER_PASSKEY')]) {
+                            withCredentials([string(credentialsId: 'dockerprogrammer', variable: 'DOCKER_PASSKEY')]) {
                             sh 'echo $DOCKER_PASSKEY | docker login -u dockerprogrammer --password-stdin'
                 
                             sh 'docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins'
