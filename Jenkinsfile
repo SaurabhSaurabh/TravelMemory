@@ -24,8 +24,8 @@ pipeline {
                             usernameVariable: 'dockerHubUser',
                             passwordVariable: 'dockerHubPass')]){
                         
-                        docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins
-                        docker image tag frontend:latest  dockerprogrammer/travelmemory:frontend-jenkins
+                        sh "docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins"
+                        sh "docker image tag frontend:latest  dockerprogrammer/travelmemory:frontend-jenkins"
     
                         sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
                         sh "docker push  dockerprogrammer/travelmemory:backend-jenkins"
