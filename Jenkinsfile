@@ -20,7 +20,7 @@ pipeline {
         
         stage("Push docker image to dockerhub") {
             steps {
-                    docker login -u:dockerprogrammer -p:dckr_pat__lG3j_LRSAv0-XTM0_ZtNIW2XvY
+                    docker login -u dockerprogrammer -p dckr_pat__lG3j_LRSAv0-XTM0_ZtNIW2XvY
                     docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins:01
                     docker image tag frontend:latest dockerprogrammer/travelmemory:frontend-jenkins:01
                     docker push -u dockerprogrammer/travelmemory:backend-jenkins:01
