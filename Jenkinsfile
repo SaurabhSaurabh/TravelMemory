@@ -13,7 +13,7 @@ pipeline {
                         echo "Building backend image."
                         sh 'docker build -t backend ./backend'
 
-                        echo "Building frontend image"
+                        echo "Building frontend image."
                         sh 'docker build -t frontend ./frontend'
                 }
         }
