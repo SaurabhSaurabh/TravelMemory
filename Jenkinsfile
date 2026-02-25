@@ -20,16 +20,17 @@ pipeline {
         
         stage("Push docker image to dockerhub") {
                     steps {    
-                            withCredentials([string(credentialsId: 'dockerprogrammer', variable: 'DOCKER_PASSKEY')]) {
-                            sh 'echo $DOCKER_PASSKEY | docker login -u dockerprogrammer --password-stdin'
-                
-                            sh 'docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins'
-                            sh 'docker image tag frontend:latest dockerprogrammer/travelmemory:frontend-jenkins'
-                
-                            sh 'docker push dockerprogrammer/travelmemory:backend-jenkins'
-                            sh 'docker push dockerprogrammer/travelmemory:frontend-jenkins'
-                        }
-                }
+                            withCredentials([usernamePassword(credentialsId: 'dockerprogrammer',
+                                          usernameVariable: 'DOCKER_USER',
+                                          passwordVariable: 'DOCKER_PASS')]) {
+                                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    
+                                sh 'docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins'
+                                sh 'docker image tag frontend:latest dockerprogrammer/travelmemory:frontend-jenkins'
+                    
+                                sh 'docker push dockerprogrammer/travelmemory:backend-jenkins'
+                                sh 'docker push dockerprogrammer/travelmemory:frontend-jenkins'
+                            }
           }
       }
   }
