@@ -10,7 +10,7 @@ pipeline {
         }
         stage("Build docker image") {
                 steps {
-                        echo "Building backend image"
+                        echo "Building backend image."
                         sh 'docker build -t backend ./backend'
 
                         echo "Building frontend image"
