@@ -20,17 +20,11 @@ pipeline {
         
         stage("Push docker image to dockerhub") {
             steps {
-                withCredentials([usernamePassword('credentialsId': 'docker',
-                usernameVariable: 'dockerHubUser',
-                passwordVariable: 'dockerHubPass')]){
-                    
+                    docker login -u:dockerprogrammer -p:dckr_pat__lG3j_LRSAv0-XTM0_ZtNIW2XvY
                     docker image tag backend:latest dockerprogrammer/travelmemory:backend-jenkins:01
                     docker image tag frontend:latest dockerprogrammer/travelmemory:frontend-jenkins:01
-
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                    sh "docker push  dockerprogrammer/travelmemory:backend-jenkins:01"
-                    sh "docker push  dockerprogrammer/travelmemory:frontend-jenkins:01"
-                
+                    docker push -u dockerprogrammer/travelmemory:backend-jenkins:01
+                    docker push -u dockerprogrammer/travelmemory:frontend-jenkins:01
                 }
             }
         }
